@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>行情</title>
+</head>
+<body>
+
+    <h3>行情数据</h3>
+    {% for data in datas %}
+        {{data.time}}, {{data.open}}
+        <br>
+    {% endfor %}
+
+</body>
+</html>

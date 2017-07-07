@@ -42,5 +42,5 @@ def article_edit_action(request):
     article.title = request.POST['title']
     article.content = request.POST['content']
     article.save()
-    return HttpResponseRedirect('articles/' + str(article.id)
-    return  render(request, 'blog/article.html', {'article': article})
+    return HttpResponseRedirect('articles/' + str(article.id))
+    # return  render(request, 'blog/article.html', {'article': article})

@@ -1,0 +1,3 @@
+创建一个名为books的app
+python manage.py startapp books
+

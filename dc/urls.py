@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^aqi/', include('aqi.urls')),
     url(r'^blog/', include('blog.urls')),
+    url(r'^touzi/', include('touzi.urls')),
 ]
