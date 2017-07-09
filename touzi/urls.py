@@ -2,5 +2,6 @@ from django.conf.urls import url
 
 import touzi.views as touzi_view
 urlpatterns = [
-    url('index', touzi_view.index),
+    url('index/$', touzi_view.index),
+    url('kline/(?P<commodity>\w+)/(?P<cycle>\w+)', touzi_view.kline), #返回k线数据
 ]
