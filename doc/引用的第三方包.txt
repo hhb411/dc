@@ -1,1 +1,2 @@
+django
 PyMySQL #mysql支持，jango.db.backends.mysql支持

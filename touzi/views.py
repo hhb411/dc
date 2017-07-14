@@ -5,10 +5,10 @@ from django.core import serializers
 from . import models
 
 
-def index(request):
-    model = models.getModel('ltc', 'hour')
-    datas = model.objects.all()
-    return render(request, 'touzi/index.html', {'datas':datas})
+def index(request, commodity):
+    # model = models.getModel('ltc', 'hour')
+    # datas = model.objects.all()
+    return render(request, 'touzi/index.html', {'commodity':commodity, 'rootPath': 'http://'+request.get_host()})
 
 # 返回k线数据
 # commodity: 交易品种(ltc, btc...)

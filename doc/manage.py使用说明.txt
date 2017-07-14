@@ -1,3 +1,8 @@
 创建一个名为books的app
 python manage.py startapp books
 
+同步数据库
+python manage.py makemigrations #创建同步文件
+python manage.py migrate #执行同步，同步到数据库
+
+python manage.py runserver 0.0.0.0:8000 运行web服务器

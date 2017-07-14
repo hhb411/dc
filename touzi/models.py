@@ -45,37 +45,85 @@ def getModel(commodity, cycle):
             result = KlineLtcMin15
         elif (cycle == 'min5'):
             result = KlineLtcMin5
+    elif (commodity == 'btc'):
+        if (cycle == 'month'):
+            result = KlineBtcMonth
+        elif (cycle == 'week'):
+            result = KlineBtcWeek
+        elif (cycle == 'day'):
+            result = KlineBtcDay
+        elif (cycle == 'hour'):
+            result = KlineBtcHour
+        elif (cycle == 'min30'):
+            result = KlineBtcMin30
+        elif (cycle == 'min15'):
+            result = KlineBtcMin15
+        elif (cycle == 'min5'):
+            result = KlineBtcMin5
+
     return result
 
+#行情数据表：莱特币
 class KlineLtcMonth(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=6)
     class Meta:
         db_table = 'data_ltc_month'
 
 class KlineLtcWeek(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=8)
     class Meta:
         db_table = 'data_ltc_week'
 
-#行情数据表：莱特币-日数据
 class KlineLtcDay(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=8)
     class Meta:
         db_table = 'data_ltc_day'
 
-#行情数据表：莱特币-小时数据
 class KlineLtcHour(AbstractKline):
     class Meta:
         db_table = 'data_ltc_hour'
 
-#行情数据表：莱特币
 class KlineLtcMin30(AbstractKline):
     class Meta:
         db_table = 'data_ltc_min30'
 
-#行情数据表：莱特币
 class KlineLtcMin15(AbstractKline):
     class Meta:
         db_table = 'data_ltc_min15'
 
-#行情数据表：莱特币
 class KlineLtcMin5(AbstractKline):
     class Meta:
         db_table = 'data_ltc_min5'
+
+#行情数据表：比特币
+class KlineBtcMonth(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=6)
+    class Meta:
+        db_table = 'data_btc_month'
+
+class KlineBtcWeek(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=8)
+    class Meta:
+        db_table = 'data_btc_week'
+
+class KlineBtcDay(AbstractKline):
+    time = models.CharField(primary_key=True, max_length=8)
+    class Meta:
+        db_table = 'data_btc_day'
+
+class KlineBtcHour(AbstractKline):
+    class Meta:
+        db_table = 'data_btc_hour'
+
+class KlineBtcMin30(AbstractKline):
+    class Meta:
+        db_table = 'data_btc_min30'
+
+class KlineBtcMin15(AbstractKline):
+    class Meta:
+        db_table = 'data_btc_min15'
+
+#行情数据表：莱特币
+class KlineBtcMin5(AbstractKline):
+    class Meta:
+        db_table = 'data_btc_min5'

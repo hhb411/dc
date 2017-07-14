@@ -2,30 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>行情</title>
+    <title>行情 {{commodity}}</title>
 </head>
 <body>
-    <a href="javascript:getKline('ltc','min5')">5分</a>
-    <a href="javascript:getKline('ltc','min15')">15分</a>
-    <a href="javascript:getKline('ltc','min30')">30分</a>
-    <a href="javascript:getKline('ltc','hour')">时</a>
-    <a href="javascript:getKline('ltc','day')">日</a>
-    <a href="javascript:getKline('ltc','week')">周</a>
-    <a href="javascript:getKline('ltc','month')">月</a>
-    <div id="kline-chart" style="width: 600px;height:400px;"></div>
-    <h3>行情数据</h3>
-    {% for data in datas %}
-        {{data.time}}, {{data.open}}
-        <br>
-    {% endfor %}
+    <span>{{commodity}} &ensp;&ensp;</span>
+    <a href="javascript:getKline('{{commodity}}','min5')">5分</a>
+    <a href="javascript:getKline('{{commodity}}','min15')">15分</a>
+    <a href="javascript:getKline('{{commodity}}','min30')">30分</a>
+    <a href="javascript:getKline('{{commodity}}','hour')">时</a>
+    <a href="javascript:getKline('{{commodity}}','day')">日</a>
+    <a href="javascript:getKline('{{commodity}}','week')">周</a>
+    <a href="javascript:getKline('{{commodity}}','month')">月</a>
+    <div id="kline-chart" style="width:100%; height:500px"></div>
+    <!--<h3>行情数据</h3>-->
+    <!--{% for data in datas %}-->
+        <!--{{data.time}}, {{data.open}}-->
+        <!--<br>-->
+    <!--{% endfor %}-->
 
-<script src="../../../../static/vendor/jquery/jquery.js"></script>
-<script src="../../../../static/vendor/echarts/echarts.js"></script>
+<script src="/static/vendor/jquery/jquery.js"></script>
+<script src="/static/vendor/echarts/echarts.min.js"></script>
 <script>
 
-var api_host = 'http://localhost:8000/touzi/';
+var api_host = '{{rootPath}}/touzi/';
 
-getKline('ltc', 'hour');
+getKline('{{commodity}}', 'day');
 
 //获取k线数据
 function getKline(commodity, cycle) {
@@ -38,15 +39,25 @@ function getKline(commodity, cycle) {
 
 //展示k线图
 function displayKlineChart(rawData) {
-    //时间
+    //基础颜色设定
+    var colors = {
+        backgroundColor: '#21202D',//背景颜色
+        yangColor: '#21202D',//阳线颜色(与背景色相同)
+        yangBorderColor: '#FD1050',//阳线边框颜色
+        yinColor: '#0CF49B',//阴线颜色
+        yinBorderColor: '#0CF49B',//阴线边框颜色
+        pingColor: '#EEEEEE',//平线颜色
+        pingBorderColor: '#EEEEEE'//平线边框颜色
+    };
+
+    //时间数据
     var time = rawData.map(function (item) {
         return item[0];
     });
-    //k线数据(用于画线)
+    //k线数据
     var barData = rawData.map(function (item) {
-        return {
-            value: [+item[1], +item[2], +item[3], +item[4]]
-        };
+        return [+item[1], +item[2], +item[3], +item[4]]
+        ;
     });
     //收盘价数据
     var closeData = rawData.map(function(item) {
@@ -60,28 +71,33 @@ function displayKlineChart(rawData) {
     var amountSeriesData = rawData.map(function(item) {
         open = item[1];
         close = item[2];
+        var color, borderColor;
         //成交量颜色
-        if (close > open)
-            color = '#FD1050';
-        else if (close < open)
-            color = '#0CF49B';
-        else
-            color = '#EEEEEE';
+        if (close > open) {
+            color = colors.yangColor;
+            borderColor = colors.yangBorderColor;
+        } else if (close < open) {
+            color = colors.yinColor;
+            borderColor = colors.yinBorderColor;
+        } else {
+            color = colors.pingColor;
+            borderColor = colors.pingBorderColor;
+        }
         return {
             value: item[5],
             itemStyle: {
                 normal: {
                     color: color,
-                    borderColor: color
+                    borderColor: borderColor
                 }
             }
         }
     });
 
     var option = {
-        backgroundColor: '#21202D',
+        backgroundColor: colors.backgroundColor,
         legend: {
-            data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+            data: ['K线', 'ma5', 'ma10', 'ma30', 'ma60'],
             inactiveColor: '#777',
             textStyle: {
                 color: '#fff'
@@ -93,10 +109,16 @@ function displayKlineChart(rawData) {
                 animation: false,
                 type: 'cross',
                 lineStyle: {
-                    color: '#376df4',
-                    width: 2,
+                    color: '#FFFFFF',
+//                    width: 2,
                     opacity: 1
                 }
+            }
+        },
+        axisPointer: {
+            link: {xAxisIndex: 'all'},
+            label: {
+                backgroundColor: '#777'
             }
         },
         grid: [{
@@ -107,25 +129,30 @@ function displayKlineChart(rawData) {
         xAxis: [{
             type: 'category',
             data: time, //横轴时间
-            axisLine: { lineStyle: { color: '#8392A5' } }
+            axisLine: { lineStyle: { color: '#FFFFFF' } },
+            splitLine: { show: false},
         },{
             gridIndex: 1,
             type: 'category',
             data: time, //横轴时间
-            show: false
+            show: false,
+            splitLine: { show: false},
         }],
         yAxis: [{
             scale: true,
-            axisLine: { lineStyle: { color: '#8392A5' } },
-            splitLine: { show: false }
+            axisLine: { lineStyle: { color: '#FFFFFF' } },
+            splitLine: { show: false },
+            position: 'right'
         },{
             gridIndex: 1,
             scale: true,
-            axisLine: { lineStyle: { color: '#8392A5' } },
-            splitLine: { show: false }
+            axisLine: { lineStyle: { color: '#FFFFFF' } },
+            splitLine: { show: false },
+            position: 'right'
         }],
         dataZoom: [{
             type: 'slider',
+            xAxisIndex: [0, 1],
             textStyle: {
                 color: '#8392A5'
             },
@@ -147,7 +174,6 @@ function displayKlineChart(rawData) {
                 shadowOffsetX: 2,
                 shadowOffsetY: 2
             },
-            xAxisIndex: [0, 1],
         },{
             type: 'inside',
             xAxisIndex: [0, 1],
@@ -156,57 +182,61 @@ function displayKlineChart(rawData) {
         series: [
             {
                 type: 'candlestick',
-                name: '日K',
+                name: 'K线',
                 data: barData,
                 itemStyle: {
                     normal: {
-                        color: '#FD1050',
-                        color0: '#0CF49B',
-                        borderColor: '#FD1050',
-                        borderColor0: '#0CF49B'
+                        color: colors.yangColor,
+                        color0: colors.yinColor,
+                        borderColor: colors.yangBorderColor,
+                        borderColor0: colors.yinBorderColor
                     }
                 }
             },{
-                name: 'MA5',
+                name: 'ma5',
                 type: 'line',
                 data: calculateMA(5, closeData),
                 smooth: true,
                 showSymbol: false,
                 lineStyle: {
                     normal: {
+                        color: '#FFFFFF',
                         width: 1
                     }
                 }
             },{
-                name: 'MA10',
+                name: 'ma10',
                 type: 'line',
                 data: calculateMA(10, closeData),
                 smooth: true,
                 showSymbol: false,
                 lineStyle: {
                     normal: {
+                        color: '#ffff01',
                         width: 1
                     }
                 }
             },{
-                name: 'MA20',
-                type: 'line',
-                data: calculateMA(20, closeData),
-                smooth: true,
-                showSymbol: false,
-                lineStyle: {
-                    normal: {
-                        width: 1
-                    }
-                }
-            },{
-                name: 'MA30',
+                name: 'ma30',
                 type: 'line',
                 data: calculateMA(30, closeData),
                 smooth: true,
                 showSymbol: false,
                 lineStyle: {
                     normal: {
+                        color: '#ff29fe',
+                        width: 1
+                    }
+                }
+            },{
+                name: 'ma60',
+                type: 'line',
+                data: calculateMA(60, closeData),
+                smooth: true,
+                showSymbol: false,
+                lineStyle: {
+                    normal: {
+                        color: '#3a86ff',
                         width: 1
                     }
                 }
@@ -217,13 +247,25 @@ function displayKlineChart(rawData) {
                 xAxisIndex: 1,
                 yAxisIndex: 1,
             },{
-                name: '成交量MA5',
+                name: '成交量ma5',
                 type: 'line',
                 data: calculateMA(5, amountData),
                 lineStyle: {
                     normal: {
+                        color: '#FFFFFF',
                         width: 1,
-                        color: '#FFFFFF'
+                    }
+                },
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+            },{
+                name: '成交量ma10',
+                type: 'line',
+                data: calculateMA(10, amountData),
+                lineStyle: {
+                    normal: {
+                        color: '#ffff01',
+                        width: 1,
                     }
                 },
                 xAxisIndex: 1,
@@ -251,7 +293,8 @@ function calculateMA(dayCount, data) {
 //            sum += data[i - j][1];
             sum += data[i - j];
         }
-        result.push(sum / dayCount);
+        var ma = (sum / dayCount).toFixed(2);//保留小数位数
+        result.push(ma);
     }
     return result;
 }
