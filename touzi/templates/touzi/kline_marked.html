@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>行情(交易记录) {{commodity}}</title>
+</head>
+<body>
+    <h3>交易品种</h3>
+    <div id="securities"></div>
+    <!--K线图-->
+    <div id="kline-chart" style="width:100%; height:500px"></div>
+<script src="/static/vendor/jquery/jquery.js"></script>
+<script src="/static/vendor/echarts/echarts.min.js"></script>
+<script>
+var orders = {{orders|safe}};
+
+var html = '<button class="security_btn" data-security="000002.XSHE">000002.XSHE</button>';
+$('#securities').append(html);
+
+$('#security_btn').on('click', function (e) {
+    var security = $(e.sender).data('security');
+    var orderData = getOrderData(security);
+    var barData = getBarData(security);
+    displayKlineChart(barData, orderData);
+})
+
+#获取指定品种的交易记录。没找到则返回null
+function getOrderData(security) {
+    for (i in orders) {
+        var order = orders[i];
+        if (order.security == security) {
+            return order;
+        }
+    }
+    return null;
+}
+
+#获取指定品种的行情数据
+function getBarData() {
+    //TODO
+}
+
+//生成K线图
+function displayKlineChart(data) {
+
+}
+</script>
+</body>
+</html>

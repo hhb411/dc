@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
+import json
+import urllib
 
 from . import models
 
@@ -22,4 +24,11 @@ def kline(request, commodity, cycle):
         datas_json.append(data.toArr())
     return JsonResponse(datas_json, safe=False)
 
-
+def kline_marked(request):
+    # data = simplejson.loads(request.raw_post_data)
+    order_str = request.GET['order']
+    # order = json.loads(order_str)
+    # return JsonResponse(order, safe=False)
+    # return render(request, 'touzi/kline_marked.html', {'order', order})
+    s = urllib.request.unquote(order_str)
+    return render(request, 'touzi/kline_marked.html', {'orders': order_str})
